@@ -1,0 +1,1815 @@
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+/* ===== ТЕМА И БАЗА ===== */
+:root{
+  --bg:#eef3f8;
+  --card:#ffffff;
+  --text:#2a2f36;
+  --muted:#6b7280;
+  --brand:#0ea5e9;    /* акцент */
+  --accent:#d32f2f;   /* красный для стикеров */
+  --ring:0 0 0 3px rgba(14,165,233,.15);
+  --brd:#e6ebf2;
+  --chip:#f7fafc;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:radial-gradient(1200px 600px at 10% -10%, #f7fbff 0%, var(--bg) 60%, #e7edf3 100%);
+  font-family: "Segoe UI", Arial, sans-serif;
+  color:var(--text);
+  padding:14px;
+}
+
+/* ===== КАРТОЧКА-БЛОК ===== */
+.main-block{
+  position:relative;
+  /* слой фона с лёгким шумом и отблеском */
+  background:
+    radial-gradient(120% 120% at 120% -20%, rgba(14,165,233,.10) 0%, rgba(14,165,233,0) 45%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  font-size:14px;
+  max-width:420px;
+  margin:16px auto;
+  padding:14px;
+  border-radius:18px;
+  border:1px solid var(--brd);
+  box-shadow:
+    0 12px 30px rgba(16,24,40,.06),
+    0 2px 6px rgba(16,24,40,.06);
+  overflow:hidden;
+  isolation:isolate; /* для псевдоэлементов */
+}
+
+/* декоративный блик вверху */
+.main-block::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0));
+  pointer-events:none;
+  mix-blend-mode:soft-light;
+  opacity:.7;
+}
+
+/* ===== ШАПКА БРЕНДА ===== */
+.brand-head{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:30px;
+  padding:20px 25px 9px;
+  border-radius:19px;
+  background:linear-gradient(180deg,#ffffff, #f7fbff);
+  border:1px dashed #e7ecf3;
+}
+.bonus-title {
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: .4px;
+  color: #111827;
+
+}
+
+.sku{
+  font-size:12px;
+  color:var(--accent);
+  font-weight:600;
+  letter-spacing:.3px;
+  padding:2px 10px;
+  background:#fff5f5;
+  border:1px solid #ffe0e0;
+  border-radius:999px;
+}
+
+/* ===== ПИЛЮЛЯ (общий бонус) ===== */
+
+.brand-head.solo{ position:relative; }
+
+.pill{
+  position:absolute;
+  top:-5px; right:12px;
+  background:linear-gradient(180deg, #ef4444, #d32f2f);
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  padding:1px 12px;
+  border-radius:999px;
+  box-shadow:0 6px 14px rgba(211,47,47,.35);
+  pointer-events:none;
+}
+
+/* ===== ЛЕВЫЙ БЕЙДЖ (опционально) ===== */
+.left-badge{
+  position:absolute;
+  left:-126px; /* чтобы выглядывал с левого края */
+  top:50%;
+  transform:translateY(-50%) rotate(-8deg);
+  background:linear-gradient(180deg, #d32f2f, #b91c1c);
+  color:#fff;
+  font-size:11px;
+  font-weight:800;
+  padding:6px 14px;
+  border-radius:12px;
+  box-shadow:0 10px 22px rgba(0,0,0,.20);
+  white-space:nowrap;
+  letter-spacing:.3px;
+  border:1px solid rgba(255,255,255,.25);
+}
+
+/* ===== DETAILS / SUMMARY ===== */
+details{
+  padding:10px 0;
+  margin:12px 0;
+  border-top:1px solid #eef2f7;
+}
+summary{
+  list-style:none;
+  cursor:pointer;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:8px 10px;
+  border-radius:12px;
+  font-weight:700;
+  color:#0f172a;
+  transition:box-shadow .2s, transform .2s, background .2s;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"";
+  width:10px; height:10px;
+  border-right:2px solid #475569; border-bottom:2px solid #475569;
+  transform:rotate(45deg) translateY(-1px);
+  transition:transform .25s, border-color .25s;
+}
+details[open] > summary::after{
+  transform:rotate(-135deg) translateY(1px);
+  border-color:var(--accent);
+}
+summary:hover{ background:#f8fafc }
+summary:active{ transform:translateY(1px) }
+details[open]{ border-top-color:#f1f5f9 }
+
+/* ===== СПИСКИ ===== */
+ol, ul{list-style:none; margin:0; padding:0}
+li{margin-bottom:10px}
+
+/* ===== КАРТОЧКА ТОВАРА ===== */
+.card{
+  position:relative;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:12px;
+  background:var(--card);
+  border:1px solid var(--brd);
+  border-radius:14px;
+  box-shadow:0 2px 10px rgba(2,6,23,.04);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.card:hover{
+  transform:translateY(-2px);
+  border-color:#dbe4ee;
+  box-shadow:0 10px 24px rgba(2,6,23,.08);
+}
+.thumb{flex:0 0 86px}
+.thumb img{
+  width:86px; height:64px; object-fit:cover;
+  border-radius:10px;
+  border:1px solid #eef2f7;
+  background:#f8fafc;
+}
+.item-body{display:flex; flex-direction:column; gap:4px; min-width:0}
+.points{font-weight:800; color:#111827}
+.meta{color:var(--muted); font-size:12px}
+a{color:#0ea5e9; text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ===== НАКЛЕЙКА НА КАРТОЧКЕ ===== */
+.sticker{
+  position:absolute;
+  top:-6px; right:-6px;
+  padding:6px 10px;
+  font-size:11px; font-weight:800;
+  background:linear-gradient(180deg, #ef4444, #d32f2f);
+  color:#fff; border-radius:999px;
+  box-shadow:0 8px 18px rgba(211,47,47,.35);
+  pointer-events:none;
+}
+
+/* ===== ФИЛЬТРЫ (без JS) ===== */
+.controls{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  margin:14px 0 10px;
+}
+.controls .title{color:#475569; font-size:12px; margin-right:2px}
+input[type="radio"]{display:none}
+.chip{
+  display:inline-block; padding:8px 14px; font-size:13px; font-weight:600;
+  border:1px solid var(--brd); border-radius:999px; background:var(--chip);
+  transition:all .2s ease; user-select:none; cursor:pointer;
+}
+input[type="radio"]:checked + label.chip{
+  border-color:#94d9f6; background:#eefaff; color:#0369a1; box-shadow:var(--ring);
+}
+
+/* ===== КАМЕРЫ (CSS-фильтр по data-атрибутам) ===== */
+.cams .f-mp-all:checked ~ ol li{display:list-item}
+.cams .f-mp-2:checked   ~ ol li:not([data-mpx="2MP"]){display:none}
+.cams .f-mp-4:checked   ~ ol li:not([data-mpx="4MP"]){display:none}
+.cams .f-mp-5:checked   ~ ol li:not([data-mpx="5MP"]){display:none}
+.cams .f-mp-6:checked   ~ ol li:not([data-mpx="6MP"]){display:none}
+.cams .f-mp-8:checked   ~ ol li:not([data-mpx="8MP"]){display:none}
+.cams .f-mp-wifi:checked~ ol li:not([data-mpx="wifi"]){display:none}
+.cams .f-mp-ptz:checked ~ ol li:not([data-mpx="ptz"]){display:none}
+.cams .f-mp-eco:checked ~ ol li:not([data-mpx="eco"]){display:none}
+.cams .f-mp-anpr:checked~ ol li:not([data-mpx="anpr"]){display:none}
+
+/* ===== РЕГИСТРАТОРЫ ===== */
+.recs #type-nvr:checked ~ ol li:not([data-type="nvr"]){display:none}
+.recs #type-xvr:checked ~ ol li:not([data-type="xvr"]){display:none}
+.recs #ch-4:checked  ~ ol li:not([data-ch="4ch"]){display:none}
+.recs #ch-8:checked  ~ ol li:not([data-ch="8ch"]){display:none}
+.recs #ch-16:checked ~ ol li:not([data-ch="16ch"]){display:none}
+.recs #ch-32:checked ~ ol li:not([data-ch="32ch"]){display:none}
+.recs #ch-64:checked ~ ol li:not([data-ch="64ch"]){display:none}
+
+/* ===== ДОСТУП ===== */
+.acs #f-125:checked    ~ ul li:not([data-tags~="125"]){display:none}
+.acs #f-13:checked     ~ ul li:not([data-tags~="13"]){display:none}
+.acs #f-mifare:checked ~ ul li:not([data-tags~="mifare"]){display:none}
+.acs #f-em:checked     ~ ul li:not([data-tags~="em"]){display:none}
+
+/* ===== ТЕРМИНАЛЫ РАСПОЗНАВАНИЯ ===== */
+.terms #t-all:checked   ~ ul li{display:list-item}
+.terms #t-face:checked  ~ ul li:not([data-tags~="face"]){display:none}
+.terms #t-card:checked  ~ ul li:not([data-tags~="card"]){display:none}
+.terms #t-fp:checked    ~ ul li:not([data-tags~="finger"]){display:none}
+
+/* ===== ВИДЕОДОМОФОНЫ ===== */
+.interphones #scr-7:checked   ~ ul li:not([data-size="7"]){display:none}
+.interphones #scr-10:checked  ~ ul li:not([data-size="10"]){display:none}
+.interphones #tech-ip:checked   ~ ul li:not([data-tech~="ip"]){display:none}
+.interphones #tech-2w:checked   ~ ul li:not([data-tech~="2wire"]){display:none}
+
+
+/* ===== АДАПТИВ ===== */
+@media (max-width:420px){
+  .main-block{margin:12px auto; padding:12px}
+  .thumb{flex:0 0 76px}
+  .thumb img{width:76px; height:56px}
+  
+  /* ===== TP-LINK: фильтр по категориям ===== */
+.tplink input[type="radio"]{display:none}
+.tplink input[type="radio"]:checked + label.chip{
+  border-color:#94d9f6; background:#eefaff; color:#0369a1; box-shadow:var(--ring);
+}
+.tplink #tp-all:checked     ~ ol li{display:list-item}
+.tplink #tp-net:checked     ~ ol li:not([data-cat="net"]){display:none}
+.tplink #tp-router:checked  ~ ol li:not([data-cat="router"]){display:none}
+.tplink #tp-smart:checked   ~ ol li:not([data-cat="smart"]){display:none}
+
+/* ===== AJAX: фильтр по категориям ===== */
+.ajax input[type="radio"]{display:none}
+.ajax input[type="radio"]:checked + label.chip{
+  border-color:#94d9f6; background:#eefaff; color:#0369a1; box-shadow:var(--ring);
+}
+.ajax #aj-all:checked      ~ ol li{display:list-item}
+.ajax #aj-sensors:checked  ~ ol li:not([data-cat="sensor"]){display:none}
+.ajax #aj-kits:checked     ~ ol li:not([data-cat="kit"]){display:none}
+.ajax #aj-sockets:checked  ~ ol li:not([data-cat="socket"]){display:none}
+
+/* ===== TP-LINK TAPO: фильтр по подкатегориям ===== */
+.tapo input[type="radio"]{display:none}
+.tapo input[type="radio"]:checked + label.chip{
+  border-color:#94d9f6; background:#eefaff; color:#0369a1; box-shadow:var(--ring);
+}
+.tapo #tapo-all:checked     ~ ol li{display:list-item}
+.tapo #tapo-socket:checked  ~ ol li:not([data-cat="socket"]){display:none}
+.tapo #tapo-switch:checked  ~ ol li:not([data-cat="switch"]){display:none}
+.tapo #tapo-sensor:checked  ~ ol li:not([data-cat="sensor"]){display:none}
+.tapo #tapo-light:checked   ~ ol li:not([data-cat="light"]){display:none}
+.tapo #tapo-robot:checked   ~ ol li:not([data-cat="robot"]){display:none}
+.tapo #tapo-hub:checked     ~ ol li:not([data-cat="hub"]){display:none}
+
+
+/* ===== Энергон: фильтр по напряжению ===== */
+.energon input[type="radio"]{display:none}
+.energon input[type="radio"]:checked + label.chip{
+  border-color:#94d9f6; background:#eefaff; color:#0369a1; box-shadow:var(--ring);
+}
+.energon #en-all:checked  ~ ol li{display:list-item}
+.energon #en-6v:checked  ~ ol li:not([data-volt="6v"]){display:none}
+.energon #en-12v:checked ~ ol li:not([data-volt="12v"]){display:none}
+
+}
+</style>
+</head>
+
+<body>
+    
+
+<div class="main-block">
+  <!-- опционально: включи строку ниже, если нужна лента слева -->
+  <!-- <div class="left-badge">ПОВЫШЕННЫЙ КЭШБЭК</div> -->
+
+  
+
+  <!-- ======== БРЕНД: HIKVISION (исходный) ======== -->
+  <details>
+    <summary>
+      <div class="brand-head">
+          <div class="pill">Общий бонус до 1%</div>
+        <div class="bonus-title">Hikvision</div>
+        <span class="sku">▾ ПОВЫШЕННЫЙ КЭШБЭК ▾</span>
+      </div>
+    </summary>
+
+    <!-- ===== КАМЕРЫ ===== -->
+    <details>
+      <summary>Камеры</summary>
+
+      <div class="cams">
+  <!-- Радиокнопки — строго ПЕРЕД списком -->
+  <input type="radio" name="mp-hik" class="f-mp-all"  id="hik-mp-all" checked><label class="chip" for="hik-mp-all">Все</label>
+  <input type="radio" name="mp-hik" class="f-mp-2"    id="hik-mp-2"><label class="chip" for="hik-mp-2">2MP</label>
+  <input type="radio" name="mp-hik" class="f-mp-4"    id="hik-mp-4"><label class="chip" for="hik-mp-4">4MP</label>
+  <input type="radio" name="mp-hik" class="f-mp-5"    id="hik-mp-5"><label class="chip" for="hik-mp-5">5MP</label>
+  <input type="radio" name="mp-hik" class="f-mp-6"    id="hik-mp-6"><label class="chip" for="hik-mp-6">6MP</label>
+  <input type="radio" name="mp-hik" class="f-mp-8"    id="hik-mp-8"><label class="chip" for="hik-mp-8">8MP</label>
+
+
+        <ol>
+          <!-- === ТРУБНЫЕ / БУЛЛЕТ, КУПОЛЬНЫЕ, ПРОЧЕЕ === -->
+<li data-mpx="2MP">
+  <div class="card has-sticker">
+    <span class="sticker">360 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29124.jpg" alt="HIKVISION DS-2CD1327G0-L"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 29124</div>
+      <div class="meta">• 2MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29124&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера купольная HIKVISION DS-2CD1327G0-L (2MP/2.8mm/1920x1080)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="4MP">
+  <div class="card has-sticker">
+    <span class="sticker">170 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30215.jpg" alt="HIKVISION DS-2CD1347G2-L"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 30215</div>
+      <div class="meta">• 4MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30215&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера купольная HIKVISION DS-2CD1347G2-L (4MP/2.8mm/2560×1440 Lux/H.265+/EXIR2.0 30m/IP67/Basic Event)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="5MP">
+  <div class="card has-sticker">
+    <span class="sticker">530 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/31959.jpg" alt="HIKVISION DS-2CD1157G0-L"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 31959</div>
+      <div class="meta">• 5MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=31959&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера купольная HIKVISION DS-2CD1157G0-L (5MP/2.8mm/2560×1920/ Lux/H.264+/H.265+/LED 30m/IP67/Basic Event/ ColorVu)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="4MP">
+  <div class="card has-sticker">
+    <span class="sticker">620 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29823.jpg" alt="HIKVISION DS-2CD2347G2-LU"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 29823</div>
+      <div class="meta">• 4MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29823&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера купольная HIKVISION DS-2CD2347G2-LU (4MP/2.8mm/2688×1520/ 0,0005 Lux/H.265+/LED 30m/IP67/Mic/Smart Events/ ColorVu)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="4MP">
+  <div class="card has-sticker">
+    <span class="sticker">650 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29442.jpg" alt="HIKVISION DS-2CD2347G2-LSU/SL"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 29442</div>
+      <div class="meta">• 4MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29442&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера купольная HIKVISION DS-2CD2347G2-LSU/SL (4MP/2.8mm/2688×1520  Lux/H.265+/LED 30m/IP67/Mic/Speaker
+      Events/ColorVu)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="5MP">
+  <div class="card has-sticker">
+    <span class="sticker">140 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30699.jpg" alt="HIKVISION DS-2CD1163G0-I"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 30699</div>
+      <div class="meta">• 5MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30699&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера купольная HIKVISION DS-2CD1163G0-I (5MP/2.8mm/3200×1800  Lux/H.265+/LED 30m/IP67)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="6MP">
+  <div class="card has-sticker">
+    <span class="sticker">170 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/26190.jpg" alt="HIKVISION DS-2CD2163G0-IS"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 26190</div>
+      <div class="meta">• 6MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=26190&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера купольная HIKVISION DS-2CD2163G0-IS (6MP/2.8mm/3072x2048/  H.265+/Audio 1&1/Alarm 1&1/IR 30m/IP67/IK10)</a></div>
+    </div>
+  </div>
+</li>
+<li data-mpx="2MP">
+  <div class="card has-sticker">
+    <span class="sticker">220 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/31301.jpg" alt="HIKVISION DS-2CD1T27G2-L"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 31301</div>
+      <div class="meta">• 2MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=31301&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера буллет HIKVISION DS-2CD1T27G2-L (2MP, 1/2.8" CMOS, 4mm, 1920x1080, 0.001lux/H.265+/LED 50m/IP67/Basic event, ColorVu)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="2MP">
+  <div class="card has-sticker">
+    <span class="sticker">200 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/31594.jpg" alt="HIKVISION DS-2CD1027G2-L"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 31594</div>
+      <div class="meta">• 2MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=31594&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера буллет HIKVISION DS-2CD1027G2-L (2MP/2.8mm/1920x1080, 0.001lux/H.265+/LED 30m/IP67/Basic Event/ColorVu)</a></div>
+    </div>
+  </div>
+</li>
+
+<li data-mpx="2MP">
+  <div class="card has-sticker">
+    <span class="sticker">440 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/31978.jpg" alt="HIKVISION DS-2CD1P27G2-LUF"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 31978</div>
+      <div class="meta">• 2MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=31978&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера буллет HIKVISION DS-2CD1P27G2-LUF (2MP, 1/2.5"CMOS, 2.8mm, 1920x1080, 0.001lux/H.265+/IR 30m/IP66/Basic Event)</a></div>
+    </div>
+  </div>
+</li>
+<li data-mpx="6MP">
+  <div class="card has-sticker">
+    <span class="sticker">150 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30698.jpg" alt="HIKVISION DS-2CD1063G0-I"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 30698</div>
+      <div class="meta">• 6MP</div>
+      <div class="name"><a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30698&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">IP камера буллет HIKVISION DS-2CD1063G0-I (6MP/2.8mm/3200×1800      30m/IP67)</a></div>
+    </div>
+  </div>
+</li>
+
+
+
+        </ol>
+      </div>
+    </details>
+    
+    
+
+    <!-- ===== ВИДЕОРЕГИСТРАТОРЫ ===== -->
+    <details>
+      <summary>Видеорегистраторы</summary>
+      <div class="controls"><span class="title">Фильтр:</span></div>
+      <div class="recs">
+        <!-- Тип -->
+        <input type="radio" name="type" id="type-all" checked><label class="chip" for="type-all">Все</label>
+        <input type="radio" name="type" id="type-nvr"><label class="chip" for="type-nvr">NVR</label>
+        <input type="radio" name="type" id="type-xvr"><label class="chip" for="type-xvr">XVR</label>
+        <!-- Каналы -->
+        <input type="radio" name="ch" id="ch-all" checked><label class="chip" for="ch-all">Все каналы</label>
+        <input type="radio" name="ch" id="ch-4"><label class="chip" for="ch-4">4</label>
+        <input type="radio" name="ch" id="ch-8"><label class="chip" for="ch-8">8</label>
+        <input type="radio" name="ch" id="ch-16"><label class="chip" for="ch-16">16</label>
+        <input type="radio" name="ch" id="ch-32"><label class="chip" for="ch-32">32</label>
+        <input type="radio" name="ch" id="ch-64"><label class="chip" for="ch-64">64</label>
+
+        <ol>
+          <li data-type="nvr" data-ch="8ch">
+  <div class="card has-sticker">
+    <span class="sticker">360 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/26903.jpg" alt="DS-7608NXI-I2/S"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 26903</div>
+      <div class="meta">• NVR • 8 каналов</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=26903&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        HIKVISION DS-7608NXI-I2/S (8IP+1a, 12MP, H.265+, 2 SATA, HDMI, AcuSense, Face Rec)
+      </a>
+    </div>
+  </div>
+</li>
+
+<li data-type="nvr" data-ch="16ch">
+  <div class="card has-sticker">
+    <span class="sticker">410 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29747.jpg" alt="DS-7616NXI-I2/S(C)"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 29747</div>
+      <div class="meta">• NVR • 16 каналов</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29747&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">HIKVISION DS-7616NXI-I2/S(C) (16IP+1a, 12MP, H.265+, 2 SATA, HDMI, AcuSense, Face Rec)
+      </a>
+    </div>
+  </div>
+</li>
+
+<li data-type="nvr" data-ch="16ch">
+  <div class="card has-sticker">
+    <span class="sticker">440 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/26904.jpg" alt="DS-7716NXI-I4/S"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 26904</div>
+      <div class="meta">• NVR • 16 каналов</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=26904&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        HIKVISION DS-7716NXI-I4/S (16IP+1a, 12MP, H.265+, 4 SATA, 2xHDMI, AcuSense, Face Rec)
+      </a>
+    </div>
+  </div>
+</li>
+
+
+
+        </ol>
+      </div>
+    </details>
+    
+    <!-- ===== ТЕРМИНАЛЫ РАСПОЗНАВАНИЯ ===== -->
+<details>
+  <summary>Терминалы распознавания</summary>
+
+  <div class="controls"><span class="title">Фильтр:</span></div>
+  <div class="terms">
+    
+    <ul>
+      <!-- HIKVISION DS-K1T331 — терминал распознавания лиц -->
+      <li data-tags="face card indoor">
+        <div class="card has-sticker">
+          <span class="sticker">400 Баллов</span>
+          <div class="thumb">
+            <img src="https://www.delta.kg/images/import/Photo/27317.jpg" alt="HIKVISION DS-K1T331">
+          </div>
+          <div class="item-body">
+            <div class="sku">Арт: 27317</div>
+            <div class="meta">• Лицо • Карта • Помещение</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=27317&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+              HIKVISION DS-K1T331 (2MP, Face Recognition, Touch Screen, ~1000 лиц)
+            </a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Шаблоны для добавления других моделей -->
+      <!--
+      <li data-tags="face outdoor">
+        <div class="card has-sticker">
+          <span class="sticker">XXX Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/XXXXX.jpg" alt="Модель"></div>
+          <div class="item-body">
+            <div class="sku">Арт: XXXXX</div>
+            <div class="meta">• Лицо • Улица</div>
+            <div class="name">Название модели и ключевые характеристики…</div>
+          </div>
+        </div>
+      </li>
+
+      <li data-tags="face finger card indoor">
+        <div class="card has-sticker">
+          <span class="sticker">YYY Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/YYYYY.jpg" alt="Модель"></div>
+          <div class="item-body">
+            <div class="sku">Арт: YYYYY</div>
+            <div class="meta">• Лицо • Отпечаток • Карта • Помещение</div>
+            <div class="name">Название модели и ключевые характеристики…</div>
+          </div>
+        </div>
+      </li>
+      -->
+    </ul>
+  </div>
+</details>
+
+
+
+
+    <!-- ===== КОНТРОЛЬ ДОСТУПА ===== -->
+    <details>
+      <summary>Контроль доступа</summary>
+      <div class="controls"><span class="title">Фильтр считывателей:</span></div>
+        <ul>
+          <!-- 30802 -->
+          <li data-type="access" data-ch="2doors">
+  <div class="card has-sticker">
+    <span class="sticker">1040 Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/28257.jpg" alt="DS-K2602T"></div>
+    <div class="item-body">
+      <div class="sku">Арт: 28257</div>
+      <div class="meta">• Контроль доступа • 2 двери</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=28257&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        HIKVISION DS-K2602T (2 двери, TCP/IP, RS-485, Wiegand)
+      </a>
+    </div>
+  </div>
+</li>
+
+        </ul>
+
+    </details>
+  </details>
+
+<!-- ===== AX HOME (СИГНАЛИЗАЦИЯ) ===== -->
+<details>
+  <summary>
+      <div class="brand-head">
+          <div class="pill">Общий бонус до ???%</div>
+        <div class="bonus-title">Ax home </div>
+        <span class="sku">▾ ПОВЫШЕННЫЙ КЭШБЭК ▾</span>
+      </div>
+    </summary>
+
+  <div class="controls"><span class="title">Категории:</span></div>
+  <div class="terms">
+    <ul>
+      <!-- БРЕЛОК -->
+      <li data-tags="axhome keyfob accessory">
+        <div class="card has-sticker">
+          <span class="sticker">??? Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/detailed/3433/34178.jpg" alt="DS-K2602T"></div>
+          <div class="item-body">
+            <div class="sku">Модель: DS-PKF201-WE</div>
+            <div class="meta">• Брелок • Беспроводной</div>
+            <a target="_blank" rel="noopener"
+               href="https://www.delta.kg/besprovodnoy-brelok-ax-home-hikvision-ds-pkf201-we/?ysclid=mg7xek4ozk352073705">
+              Беспроводной брелок AX Home Hikvision DS-PKF201-WE
+            </a>
+          </div>
+        </div>
+      </li>
+
+      <!-- КЛАВИАТУРА LED -->
+      <li data-tags="axhome keypad accessory">
+        <div class="card has-sticker">
+     <span class="sticker">??? Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/detailed/3433/34206.jpg" alt="DS-K2602T"></div>
+          <div class="item-body">
+            <div class="sku">Модель: DS-PK201B-WE</div>
+            <div class="meta">• Клавиатура • Светодиодная • Беспроводная</div>
+            <a target="_blank" rel="noopener"
+               href="https://www.delta.kg/besprovodnaya-svetodiodnaya-klaviatura-ax-home-hikvision-ds-pk201b-we/">
+              Беспроводная светодиодная клавиатура AX Home Hikvision DS-PK201B-WE
+            </a>
+          </div>
+        </div>
+      </li>
+
+      <!-- КОМПЛЕКТ СИГНАЛИЗАЦИИ -->
+      <li data-tags="axhome kit starter">
+        <div class="card has-sticker">
+     <span class="sticker">??? Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/detailed/3433/34177.jpg" alt="DS-K2602T"></div>
+          <div class="item-body">
+            <div class="sku">Модель: DS-PA201PG-KIT-16WE</div>
+            <div class="meta">• Комплект сигнализации • Беспроводной</div>
+            <a target="_blank" rel="noopener"
+               href="https://www.delta.kg/komplekt-signalizacii-ax-home-hikvision-ds-pa201pg-kit-16we/">
+              Комплект сигнализации AX Home Hikvision DS-PA201PG-KIT-16WE
+            </a>
+          </div>
+        </div>
+      </li>
+
+      <!-- СМК ДАТЧИК (МАГНИТНЫЙ КОНТАКТ) -->
+      <li data-tags="axhome sensor contact doorwindow">
+        <div class="card has-sticker">
+  <span class="sticker">??? Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/detailed/3433/34181.jpg" alt="DS-K2602T"></div>
+          <div class="item-body">
+            <div class="sku">Модель: DS-PD201MC-WE</div>
+            <div class="meta">• Датчик двери/окна (СМК) • Беспроводной</div>
+            <a target="_blank" rel="noopener"
+               href="https://www.delta.kg/smk-datchik-besprovodnoy-ax-home-hikvision-ds-pd201mc-we/">
+              СМК датчик беспроводной AX Home Hikvision DS-PD201MC-WE
+            </a>
+          </div>
+        </div>
+      </li>
+
+      <!-- PIR ДАТЧИК -->
+      <li data-tags="axhome sensor pir motion">
+        <div class="card has-sticker">
+          <span class="sticker">??? Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/detailed/3433/34180.jpg" alt="DS-K2602T"></div>
+          <div class="item-body">
+            <div class="sku">Модель: DS-PD201P10-WE</div>
+            <div class="meta">• PIR датчик движения • Беспроводной</div>
+            <a target="_blank" rel="noopener"
+               href="https://www.delta.kg/besprovodnoy-pir-detektor-ax-home-hikvision-ds-pd201p10-we/">
+              Беспроводной PIR детектор AX Home Hikvision DS-PD201P10-WE
+            </a>
+          </div>
+        </div>
+      </li>
+
+      <!-- БЛОК/ПАНЕЛЬ СИГНАЛИЗАЦИИ (по ссылке «беспроводная сигнализация») -->
+      <li data-tags="axhome panel hub siren">
+        <div class="card has-sticker">
+          <span class="sticker">??? Баллов</span>
+    <div class="thumb"><img src="https://www.delta.kg/images/detailed/3433/34179.jpg" alt="DS-K2602T"></div>
+          <div class="item-body">
+            <div class="sku">Модель: DS-PS201-WE</div>
+            <div class="meta">• Беспроводная сигнализация • AX Home</div>
+            <a target="_blank" rel="noopener"
+               href="https://www.delta.kg/besprovodnaya-signalizaciya-ax-home-hikvision-ds-ps201-we/">
+              Беспроводная сигнализация AX Home Hikvision DS-PS201-WE
+            </a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</details>
+
+ 
+  <!-- ======== БРЕНД: DAHUA (новый блок) ======== -->
+  <details>
+    <summary>
+      <div class="brand-head">
+           <div class="pill">Общий бонус до 1%</div>
+        <div class="bonus-title">Dahua</div>
+        <span class="sku">▾ ПОВЫШЕННЫЙ КЭШБЭК ▾</span>
+      </div>
+    </summary>
+
+    <!-- ===== КАМЕРЫ ===== -->
+    <details>
+      <summary>Камеры</summary>
+
+      <div class="cams">
+  <input type="radio" name="mp-dahua" class="f-mp-all"  id="dh-mp-all" checked><label class="chip" for="dh-mp-all">Все</label>
+  <input type="radio" name="mp-dahua" class="f-mp-2"    id="dh-mp-2"><label class="chip" for="dh-mp-2">2MP</label>
+  <input type="radio" name="mp-dahua" class="f-mp-4"    id="dh-mp-4"><label class="chip" for="dh-mp-4">4MP</label>
+  <input type="radio" name="mp-dahua" class="f-mp-5"    id="dh-mp-5"><label class="chip" for="dh-mp-5">5MP</label>
+  <input type="radio" name="mp-dahua" class="f-mp-6"    id="dh-mp-6"><label class="chip" for="dh-mp-6">6MP</label>
+  <input type="radio" name="mp-dahua" class="f-mp-8"    id="dh-mp-8"><label class="chip" for="dh-mp-8">8MP</label>
+
+        <ol>
+          <!-- Купольные -->
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">180 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30421.jpg" alt="DH-IPC-HDW1230T1-S5"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30421</div>
+                <div class="meta">• 2MP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30421&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  IP камера купольная DH-IPC-HDW1230T1-S5 (2MP, 2.8mm, 1920×1080, IR30m, H.265, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">180 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30422.jpg" alt="DH-IPC-HDW1230T1-A-S5"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30422</div>
+                <div class="meta">• 2MP • Audio</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30422&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  IP камера купольная DH-IPC-HDW1230T1-A-S5 (2MP, 2.8mm, 1920×1080, IR30m, Audio, H.265, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">270 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30442.jpg" alt="IPC-HDBW1230RP-ZS-2812-S5-QH"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30442</div>
+                <div class="meta">• 2MP • Variofocal</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30442&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  IP камера купольная вариофокальная IPC-HDBW1230RP-ZS-2812-S5-QH (2MP, 2.8-12mm, IR40m, IK10, POE)
+                </a>
+              </div>
+            </div>
+          </li>
+          <!-- DH-IPC-HFW2849T-AS-IL -->
+<li data-mpx="8MP">
+  <div class="card has-sticker">
+    <span class="sticker">890 Баллов</span>
+    <div class="thumb">
+      <img src="https://www.delta.kg/images/import/Photo/32155.jpg" alt="DH-IPC-HFW2849T-AS-IL">
+    </div>
+    <div class="item-body">
+      <div class="sku">Арт: 32155</div>
+      <div class="meta">• 8MP • Bullet</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32155&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        IP камера буллет DH-IPC-HFW2849T-AS-IL (8MP, 3.6mm, 3840×2160 @20fps, IR 60m, LED 50m, IK10, POE)
+      </a>
+    </div>
+  </div>
+</li>
+
+<!-- DH-IPC-HFW1230DS1-SAW -->
+<li data-mpx="2MP">
+  <div class="card has-sticker">
+    <span class="sticker">180 Баллов</span>
+    <div class="thumb">
+      <img src="https://www.delta.kg/images/import/Photo/33245.jpg" alt="DH-IPC-HFW1230DS1-SAW">
+    </div>
+    <div class="item-body">
+      <div class="sku">Арт: 33245</div>
+      <div class="meta">• 2MP • Wi-Fi Bullet</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=33245&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        Wi-Fi камера буллет DH-IPC-HFW1230DS1-SAW (2MP, 2.8mm, IR 30m, IP67)
+      </a>
+    </div>
+  </div>
+</li>
+
+<!-- DH-F2C-LED -->
+<li data-mpx="2MP">
+  <div class="card has-sticker">
+    <span class="sticker">270 Баллов</span>
+    <div class="thumb">
+      <img src="https://www.delta.kg/images/import/Photo/32924.jpg" alt="DH-F2C-LED">
+    </div>
+    <div class="item-body">
+      <div class="sku">Арт: 32924</div>
+      <div class="meta">• 2MP • Wi-Fi Bullet</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32924&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        Wi-Fi камера буллет DH-F2C-LED (2MP, 2.8mm, LED 30m, Mic, Full-Color, аналитика)
+      </a>
+    </div>
+  </div>
+</li>
+
+<!-- DH-IPC-HDW2449T-S-PRO -->
+<li data-mpx="4MP">
+  <div class="card has-sticker">
+    <span class="sticker">570 Баллов</span>
+    <div class="thumb">
+      <img src="https://www.delta.kg/images/import/Photo/33673.jpg" alt="DH-IPC-HDW2449T-S-PRO">
+    </div>
+    <div class="item-body">
+      <div class="sku">Арт: 33673</div>
+      <div class="meta">• 4MP • Dome</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=33673&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        IP камера купольная DH-IPC-HDW2449T-S-PRO (4MP, 2.8–3.6mm, IR/LED 30m, AI, WizSense)
+      </a>
+    </div>
+  </div>
+</li>
+
+<!-- DH-IPC-HDW1639T-A-IL -->
+<li data-mpx="6MP">
+  <div class="card has-sticker">
+    <span class="sticker">590 Баллов</span>
+    <div class="thumb">
+      <img src="https://www.delta.kg/images/import/Photo/33602.jpg" alt="DH-IPC-HDW1639T-A-IL">
+    </div>
+    <div class="item-body">
+      <div class="sku">Арт: 33602</div>
+      <div class="meta">• 6MP • Dome</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=33602&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        IP камера купольная DH-IPC-HDW1639T-A-IL (6MP, 2.8mm, IR 30m, mSD, POE)
+      </a>
+    </div>
+  </div>
+</li>
+
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">180 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30423.jpg" alt="DH-IPC-HDW1239T1P-LED-0280B-S5"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30423</div>
+                <div class="meta">• 2MP • Full-Color</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30423&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HDW1239T1P-LED-0280B-S5 (2MP, 2.8mm, Full Color 15m, LED, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">270 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30436.jpg" alt="DH-IPC-HDW2230TP-AS-0280B-S2-QH3"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30436</div>
+                <div class="meta">• 2MP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30436&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HDW2230TP-AS-0280B-S2-QH3 (2MP, 2.8mm, IR30m, IK10, mSD, POE)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">360 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30431.jpg" alt="DH-IPC-HDW2231TP-AS-0280B-S2-QH"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30431</div>
+                <div class="meta">• 2MP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30431&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HDW2231TP-AS-0280B-S2-QH (2MP, 2.8mm, IR30m, IK10, mSD, POE)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">360 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30777.jpg" alt="DH-IPC-HDW2249TP-S-IL-0280B"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30777</div>
+                <div class="meta">• 2MP • Mic</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30777&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HDW2249TP-S-IL-0280B (2MP, 2.8mm, IR30m, WizSense, mSD, Mic)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="4MP">
+            <div class="card has-sticker">
+              <span class="sticker">260 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32445.jpg" alt="DH-IPC-HFW2449S-S-IL-0280B"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 32445</div>
+                <div class="meta">• 4MP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32445&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">DH-IPC-HFW2449S-S-IL-0280B (4MP, 2.8mm, H.265+, IR30m, IP67)</a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="6MP">
+            <div class="card has-sticker">
+              <span class="sticker">590 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/33603.jpg" alt="DH-IPC-HFW1639TC-A-IL"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 33603</div>
+                <div class="meta">• 6MP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=33603&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">DH-IPC-HFW1639TC-A-IL (6MP, 2.8mm, IR30m, IP67, POE, mSD)</a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="8MP">
+            <div class="card has-sticker">
+              <span class="sticker">490 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/31723.jpg" alt="DH-IPC-HFW2849SP-S-IL-0360B"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 31723</div>
+                <div class="meta">• 8MP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=31723&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">DH-IPC-HFW2849SP-S-IL-0360B (8MP, 3.6mm, IR30m, IP67, IK10, POE)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Буллет, 2MP базовый -->
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">360 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30420.jpg" alt="DH-IPC-HFW1230S1P-0280B-S5-QH2"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30420</div>
+                <div class="meta">• 2MP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30420&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HFW1230S1P-0280B-S5-QH2 (2MP, 2.8mm, IR30m, H.265, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="2MP">
+            <div class="card has-sticker">
+              <span class="sticker">180 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30424.jpg" alt="DH-IPC-HFW1239S1P-LED-0280B-S5-QH2"></div>
+            <div class="item-body">
+                <div class="sku">Арт: 30424</div>
+                <div class="meta">• 2MP • Full-Color</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30424&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HFW1239S1P-LED-0280B-S5-QH2 (2MP, 2.8mm, Full Color 15m, LED, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Wi‑Fi -->
+          <li data-mpx="wifi">
+            <div class="card has-sticker">
+              <span class="sticker">180 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32030.jpg" alt="DH-IPC-HFW1230DSP-SAW-0280B"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 32030</div>
+                <div class="meta">• 2MP • Wi‑Fi</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32030&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HFW1230DSP-SAW-0280B (2MP, 2.8mm, IR30m, H.265, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="wifi">
+            <div class="card has-sticker">
+              <span class="sticker">270 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/33246.jpg" alt="DH-IPC-HFW1430DS1-SAW"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 33246</div>
+                <div class="meta">• 4MP • Wi‑Fi</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=33246&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HFW1430DS1-SAW (4MP, 2.8mm, IR30m, H.265, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="wifi">
+            <div class="card has-sticker">
+              <span class="sticker">180 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32931.jpg" alt="DH-F4C-LED"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 32931</div>
+                <div class="meta">• 4MP • Wi‑Fi • Full‑Color</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32931&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-F4C-LED (4MP, 2.8mm, LED30m, Mic, Full‑Color, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-mpx="wifi">
+            <div class="card has-sticker">
+              <span class="sticker">180 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32930.jpg" alt="DH-IPC-HFW1430DS-SAW"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 32930</div>
+                <div class="meta">• 4MP • Wi‑Fi</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32930&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DH-IPC-HFW1430DS-SAW (4MP, 2.8mm, IR30m, mSD 256Gb, Mic, IP67)
+                </a>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- ===== ВИДЕОРЕГИСТРАТОРЫ ===== -->
+    <details>
+      <summary>Видеорегистраторы</summary>
+      <div class="recs">
+        <ol>
+          <li data-type="nvr" data-ch="4ch">
+            <div class="card has-sticker">
+              <span class="sticker">210 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30883.jpg" alt="DHI-NVR2104-I2"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30883</div>
+                <div class="meta">• NVR • 4 канала</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30883&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DHI-NVR2104-I2 (4IP+1a, 8MP, H.265+, 1 SATA, HDMI, VGA)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-type="nvr" data-ch="8ch">
+            <div class="card has-sticker">
+              <span class="sticker">360 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30453.jpg" alt="DHI-NVR4108-4KS3"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30453</div>
+                <div class="meta">• NVR • 8 каналов</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30453&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DHI-NVR4108-4KS3 Lite (8IP+1a, 8MP, H.265+, 1 SATA, HDMI, VGA)
+                </a>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- ===== ВИДЕОДОМОФОНЫ ===== -->
+    <details>
+      <summary>Видеодомофоны</summary>
+      <div class="interphones">
+        <ul>
+          <li data-size="7" data-tech="ip">
+            <div class="card has-sticker">
+              <span class="sticker">270 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30417.jpg" alt="DHI-VTH5421E-H"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30417</div>
+                <div class="meta">• 7" • IP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30417&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DHI-VTH5421E-H (7" TFT Touch, 1024×600, PoE, LAN, mSD, Two‑way video call)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-size="7" data-tech="ip">
+            <div class="card has-sticker">
+              <span class="sticker">270 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30418.jpg" alt="DHI-VTH5421EW-H"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30418</div>
+                <div class="meta">• 7" • IP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30418&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DHI-VTH5421EW-H (7" TFT Touch, 1024×600, PoE, LAN, mSD)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-size="—" data-tech="ip">
+            <div class="card has-sticker">
+              <span class="sticker">360 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30415.jpg" alt="DHI-VTO1301R-W"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30415</div>
+                <div class="meta">• Вызывная панель • IP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30415&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DHI-VTO1301R-W (2MP, 2.8mm, Wi‑Fi, Two‑way talk, IP65, WDR, IR)
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li data-size="—" data-tech="ip">
+            <div class="card has-sticker">
+              <span class="sticker">440 Баллов</span>
+              <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30414.jpg" alt="DHI-VTO2211G-WP"></div>
+              <div class="item-body">
+                <div class="sku">Арт: 30414</div>
+                <div class="meta">• Вызывная панель • IP</div>
+                <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30414&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                  DHI-VTO2211G-WP (2MP, 2.8mm, Wi‑Fi, IC card, POE, IP65)
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </details>
+    
+    <!-- ===== Сетевая клавиатура ===== -->
+    <details>
+      <summary>Сетевая клавиатура</summary>
+      <ul>
+    <!-- NKB1000-E -->
+<li data-type="keyboard">
+  <div class="card has-sticker">
+    <span class="sticker">1260 Баллов</span>
+    <div class="thumb">
+      <img src="https://www.delta.kg/images/import/Photo/31312.jpg" alt="NKB1000-E">
+    </div>
+    <div class="item-body">
+      <div class="sku">Арт: 31312</div>
+      <div class="meta">• Сетевая клавиатура • 3-осевой джойстик</div>
+      <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=31312&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+        Сетевая клавиатура NKB1000-E (RJ-45, RS232/422/485, USB)
+      </a>
+    </div>
+  </div>
+     </li>
+      </ul>
+    </details>
+
+
+
+
+    <!-- ===== КОНТРОЛЬ ДОСТУПА ===== -->
+    <details>
+      <summary>Контроль доступа</summary>
+      <ul>
+        <li data-tags="125">
+          <div class="card has-sticker">
+            <span class="sticker">90 Баллов</span>
+            <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30797.jpg" alt="DHI-ASR1200E-D"></div>
+            <div class="item-body">
+              <div class="sku">Арт: 30797</div>
+              <div class="meta">• Считыватель • 125 KHz</div>
+              <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30797&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">
+                DHI-ASR1200E-D (125 MHz, Wiegand 34, RS485, IP66)
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li data-tags="13 mifare">
+          <div class="card has-sticker">
+            <span class="sticker">180 Баллов</span>
+            <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30799.jpg" alt="DHI-ASR2200A"></div>
+            <div class="item-body">
+              <div class="sku">Арт: 30799</div>
+              <div class="meta">• 13.56 MHz • RS485 • IP66</div>
+              <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30799&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">DHI-ASR2200A (13.56 MHz, Wiegand, RS485, anti‑tamper, IP66)</a>
+            </div>
+          </div>
+        </li>
+
+        <li data-tags="125">
+          <div class="card has-sticker">
+            <span class="sticker">180 Баллов</span>
+            <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30800.jpg" alt="DHI-ASR2200A-D"></div>
+            <div class="item-body">
+              <div class="sku">Арт: 30800</div>
+              <div class="meta">• 125 KHz • RS485 • IP66</div>
+              <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30800&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">DHI-ASR2200A-D (125 MHz, Wiegand, RS485, anti‑tamper, IP66)</a>
+            </div>
+          </div>
+        </li>
+
+        <li data-tags="125">
+          <div class="card has-sticker">
+            <span class="sticker">180 Баллов</span>
+            <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30801.jpg" alt="DHI-ASR2201A-D"></div>
+            <div class="item-body">
+              <div class="sku">Арт: 30801</div>
+              <div class="meta">• 125 KHz • Пароль • RS485</div>
+              <a target="_blank" rel="noopener" href="https://www.delta.kg/search/?search=30801https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30801&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">DHI-ASR2201A-D (125 MHz, password, Wiegand, RS485, anti‑tamper)</a>
+            </div>
+          </div>
+        </li>
+
+        <li data-tags="13 mifare">
+          <div class="card has-sticker">
+            <span class="sticker">180 Баллов</span>
+            <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30802.jpg" alt="DHI-ASR2201A"></div>
+            <div class="item-body">
+              <div class="sku">Арт: 30802</div>
+              <div class="meta">• 13.56 MHz • Пароль • RS485</div>
+              <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30802&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">DHI-ASR2201A (13.56 MHz, password, Wiegand, RS485, anti‑tamper)</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </details>
+  </details>
+  
+<!-- ======== БРЕНД: AJAX (с радиофильтрами) ======== -->
+<details>
+  <summary>
+    <div class="brand-head">
+      <div class="pill">Общий бонус до 3%</div>
+      <div class="bonus-title">AJAX</div>
+      <span class="sku">▾ ПОВЫШЕННЫЙ КЭШБЭК ▾</span>
+    </div>
+  </summary>
+
+  <!-- Радиофильтры: ВАЖНО — inputs стоят ПЕРЕД списком и сразу перед label -->
+  <div class="controls"><span class="title">Категория:</span></div>
+  <div class="ajax">
+    <input type="radio" name="ajax-cat" id="aj-all" checked><label class="chip" for="aj-all">Все</label>
+    <input type="radio" name="ajax-cat" id="aj-sensors"><label class="chip" for="aj-sensors">Датчики</label>
+    <input type="radio" name="ajax-cat" id="aj-kits"><label class="chip" for="aj-kits">Комплекты</label>
+    <input type="radio" name="ajax-cat" id="aj-sockets"><label class="chip" for="aj-sockets">Розетки</label>
+
+    <ol>
+      <!-- Датчики -->
+      <li data-cat="sensor">
+        <div class="card has-sticker">
+          <span class="sticker">470 Баллов</span>
+          <div class="thumb">
+            <img src="https://www.delta.kg/images/import/Photo/29860.jpg" alt="Ajax MotionCam white">
+          </div>
+          <div class="item-body">
+            <div class="sku">Арт: 29860</div>
+            <div class="meta">• Беспроводной датчик движения • Фото-подтверждение тревог</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29860&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Ajax MotionCam white</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Комплекты -->
+      <li data-cat="kit">
+        <div class="card has-sticker">
+          <span class="sticker">2000 Баллов</span>
+          <div class="thumb">
+            <img src="https://www.delta.kg/images/import/Photo/29878.jpg" alt="Ajax StarterKit Cam Plus white">
+          </div>
+          <div class="item-body">
+            <div class="sku">Арт: 29878</div>
+            <div class="meta">• Стартовый комплект • С фото-верификацией</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29878&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Ajax StarterKit Cam Plus white</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="kit">
+        <div class="card has-sticker">
+          <span class="sticker">950 Баллов</span>
+          <div class="thumb">
+            <img src="https://www.delta.kg/images/import/Photo/29876.jpg" alt="Ajax StarterKit white">
+          </div>
+          <div class="item-body">
+            <div class="sku">Арт: 29876</div>
+            <div class="meta">• Стартовый комплект</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29876&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Ajax StarterKit white</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Розетки -->
+      <li data-cat="socket">
+        <div class="card has-sticker">
+          <span class="sticker">490 Баллов</span>
+          <div class="thumb">
+            <img src="https://www.delta.kg/images/import/Photo/30066.jpg" alt="Ajax Socket black">
+          </div>
+          <div class="item-body">
+            <div class="sku">Арт: 30066</div>
+            <div class="meta">• Умная розетка управления электроприборами • Black</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30066&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Ajax Socket black</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="socket">
+        <div class="card has-sticker">
+          <span class="sticker">490 Баллов</span>
+          <div class="thumb">
+            <img src="https://www.delta.kg/images/import/Photo/29859.jpg" alt="Ajax Socket white">
+          </div>
+          <div class="item-body">
+            <div class="sku">Арт: 29859</div>
+            <div class="meta">• Умная розетка управления электроприборами • White</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29859&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Ajax Socket white</a>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+  
+</details>
+<!-- ======== БРЕНД: Энергон (с радиофильтрацией) ======== -->
+<details>
+  <summary>
+    <div class="brand-head">
+      <div class="pill">Общий бонус до 1,5%</div>
+      <div class="bonus-title">Энергон</div>
+      <span class="sku">▾ ПОВЫШЕННЫЙ КЭШБЭК ▾</span>
+    </div>
+  </summary>
+
+  <!-- Радиофильтры -->
+  <div class="controls"><span class="title">Напряжение:</span></div>
+  <div class="energon">
+    <input type="radio" name="energon-cat" id="en-all" checked><label class="chip" for="en-all">Все</label>
+    <input type="radio" name="energon-cat" id="en-6v"><label class="chip" for="en-6v">6V</label>
+    <input type="radio" name="energon-cat" id="en-12v"><label class="chip" for="en-12v">12V</label>
+
+    <ol>
+      <!-- 6V -->
+      <li data-volt="6v">
+        <div class="card has-sticker">
+          <span class="sticker">20 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29831.jpg" alt="Delta DTM 6032 6V 3.2Ah"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 29831</div>
+            <div class="meta">• 6V • 3.2Ah • 134×34×67 мм</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29831&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Delta DTM 6032</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-volt="6v">
+        <div class="card has-sticker">
+          <span class="sticker">21 Балл</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29473.jpg" alt="Delta DT6033 6V 3.3Ah"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 29473</div>
+            <div class="meta">• 6V • 3.3Ah • 134×34×66 мм</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29473&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Delta DT6033</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-volt="6v">
+        <div class="card has-sticker">
+          <span class="sticker">34 Балла</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29244.jpg" alt="Delta DTM6045 6V 4.5Ah"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 29244</div>
+            <div class="meta">• 6V • 4.5Ah • 70×47×107 мм</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29244&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Delta DTM6045</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- 12V -->
+      <li data-volt="12v">
+        <div class="card has-sticker">
+          <span class="sticker">65 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30281.jpg" alt="Delta DTM12022 12V 2.2Ah"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 30281</div>
+            <div class="meta">• 12V • 2.2Ah • 178×35×67 мм</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30281&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Delta DTM12022</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-volt="12v">
+        <div class="card has-sticker">
+          <span class="sticker">834 Балла</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/28986.jpg" alt="Security Force SF12100 12V 100Ah"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 28986</div>
+            <div class="meta">• 12V • 100Ah</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=28986&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Security Force SF12100</a>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</details>
+<!-- ======== БРЕНД: TP-LINK (исправлено: фильтры работают) ======== -->
+<details>
+  <summary>
+    <div class="brand-head">
+      <div class="pill">Общий бонус до 1,5%</div>
+      <div class="bonus-title">TP-LINK</div>
+      <span class="sku">▾ ПОВЫШЕННЫЙ КЭШБЭК ▾</span>
+    </div>
+  </summary>
+
+  <div class="tplink">
+    <!-- ВАЖНО: inputs и labels стоят ПРЯМО перед <ol> и являются его соседями -->
+    <input type="radio" name="tplink-cat" id="tp-all" checked><label class="chip" for="tp-all">Все</label>
+    <input type="radio" name="tplink-cat" id="tp-net"><label class="chip" for="tp-net">Сетевое оборудование</label>
+    <input type="radio" name="tplink-cat" id="tp-router"><label class="chip" for="tp-router">Роутеры</label>
+
+    <ol>
+      <!-- ===== СЕТЕВОЕ ОБОРУДОВАНИЕ ===== -->
+      <li data-cat="net">
+        <div class="card has-sticker">
+          <span class="sticker">640 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/12558.jpg" alt="TP-LINK TL-SF1048"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 12558</div>
+            <div class="meta">• Коммутатор • 48×100 Мбит/с • Rack-mounted</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=12558&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK TL-SF1048</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="net">
+        <div class="card has-sticker">
+          <span class="sticker">2400 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/33157.jpg" alt="TP-LINK Omada OC400"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 33157</div>
+            <div class="meta">• Контроллер Omada • 2×10G SFP+ • 4×GE RJ45 • 2×USB 3.0</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=33157&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK Omada OC400</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="net">
+        <div class="card has-sticker">
+          <span class="sticker">310 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/28928.jpg" alt="TP-LINK TL-WPA4220 KIT"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 28928</div>
+            <div class="meta">• Powerline AV600 • KIT</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=28928&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK TL-WPA4220 KIT (EU)</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- ===== РОУТЕРЫ ===== -->
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">400 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/28930.jpg" alt="TP-LINK TL-MR150"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 28930</div>
+            <div class="meta">• 4G-LTE • 300 Мбит/с (2.4 ГГц) • 3×LAN • 1×LAN/WAN</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=28930&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK TL-MR150</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">440 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29399.jpg" alt="TP-LINK Archer MR200"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 29399</div>
+            <div class="meta">• 4G-LTE • Dual-Band: 300 (2.4) + 433 (5) • OneMesh</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29399&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK Archer MR200</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">20 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/10820.jpg" alt="TP-LINK TL-MR3420"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 10820</div>
+            <div class="meta">• 3G/4G • 300 Мбит/с • 1×WAN/4×LAN (100 Мбит/с) • USB 2.0</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=10820&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK TL-MR3420</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">1290 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/33161.jpg" alt="TP-LINK Archer BE550"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 33161</div>
+            <div class="meta">• Wi-Fi 7 • Tri-band • 2.5G WAN/LAN (4×LAN 2.5G) • USB 3.0 • 6 антенн</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=33161&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK Archer BE550</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">320 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29155.jpg" alt="TP-LINK Archer C5400X"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 29155</div>
+            <div class="meta">• AC5400 Tri-Band • 2167+2167 (5 ГГц) + 1000 (2.4 ГГц) • 8×LAN 1G • USB 3.0</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29155&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK Archer C5400X</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">300 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/26908.jpg" alt="TP-LINK Archer C58HP"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 26908</div>
+            <div class="meta">• AC1350 Dual-Band • 867 (5 ГГц) + 450 (2.4 ГГц) • 4×LAN 100 Мбит/с • IPTV</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=26908&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">TP-LINK Archer C58HP</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">50 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/24901.jpg" alt="Mercusys MW301R"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 24901</div>
+            <div class="meta">• Mercusys • N300 • 2×LAN 100 Мбит/с • 2 антенны</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=24901&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Mercusys MW301R</a>
+          </div>
+        </div>
+      </li>
+
+      <li data-cat="router">
+        <div class="card has-sticker">
+          <span class="sticker">60 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/24898.jpg" alt="Mercusys MW305R"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 24898</div>
+            <div class="meta">• Mercusys • N300 • 3×LAN 100 Мбит/с • 3 антенны</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=24898&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Mercusys MW305R</a>
+          </div>
+        </div>
+      </li>
+  </div>
+</details>
+
+<!-- ======== БРЕНД: TP-LINK TAPO ======== -->
+<details>
+  <summary>
+    <div class="brand-head">
+      <div class="pill">Общий бонус до 2%</div>
+      <div class="bonus-title">TP-Link Tapo</div>
+      <span class="sku">▾ПОВЫШЕННЫЙ КЭШБЭК▾</span>
+    </div>
+  </summary>
+
+  <div class="controls"><span class="title">Категория:</span></div>
+  <div class="tapo">
+    <!-- Радиофильтры: inputs стоят прямо перед <ol> -->
+    <input type="radio" name="tapo-cat" id="tapo-all" checked><label class="chip" for="tapo-all">Все</label>
+    <input type="radio" name="tapo-cat" id="tapo-socket"><label class="chip" for="tapo-socket">Розетки/фильтры</label>
+    <input type="radio" name="tapo-cat" id="tapo-switch"><label class="chip" for="tapo-switch">Выключатели/диммер</label>
+    <input type="radio" name="tapo-cat" id="tapo-sensor"><label class="chip" for="tapo-sensor">Датчики</label>
+    <input type="radio" name="tapo-cat" id="tapo-light"><label class="chip" for="tapo-light">Освещение</label>
+    <input type="radio" name="tapo-cat" id="tapo-robot"><label class="chip" for="tapo-robot">Роботы</label>
+    <input type="radio" name="tapo-cat" id="tapo-hub"><label class="chip" for="tapo-hub">Хабы</label>
+
+    <ol>
+      <!-- Розетки / фильтры -->
+      <li data-cat="socket">
+        <div class="card has-sticker">
+          <span class="sticker">140 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/29327.jpg" alt="Tapo P100 1-PK"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 29327</div>
+            <div class="meta">• Розетка • 1-PK • Bluetooth 4.2 • Voice Control</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=29327&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo P100 (1-PK)</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="socket">
+        <div class="card has-sticker">
+          <span class="sticker">270 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/30638.jpg" alt="Tapo P100 2-PK"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 30638</div>
+            <div class="meta">• Розетка • 2-PK • Bluetooth 4.2 • Voice Control</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=30638&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo P100 (2-PK)</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="socket">
+        <div class="card has-sticker">
+          <span class="sticker">280 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32763.jpg" alt="Tapo P300"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32763</div>
+            <div class="meta">• Сетевой фильтр • 3 розетки + USB</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32763&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo P300</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Выключатели / диммер -->
+      <li data-cat="switch">
+        <div class="card has-sticker">
+          <span class="sticker">130 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32754.jpg" alt="Tapo S210"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32754</div>
+            <div class="meta">• Выключатель • 1 клавиша</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32754&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo S210</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="switch">
+        <div class="card has-sticker">
+          <span class="sticker">170 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32751.jpg" alt="Tapo S220"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32751</div>
+            <div class="meta">• Выключатель • 2 клавиши</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32751&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo S220</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="switch">
+        <div class="card has-sticker">
+          <span class="sticker">130 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32758.jpg" alt="Tapo S200D"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32758</div>
+            <div class="meta">• Дистанционный диммер</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32758&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo S200D</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Датчики -->
+      <li data-cat="sensor">
+        <div class="card has-sticker">
+          <span class="sticker">110 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32755.jpg" alt="Tapo T100"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32755</div>
+            <div class="meta">• Датчик движения • 120°/7 м • 868/922 MHz</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32755&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo T100</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="sensor">
+        <div class="card has-sticker">
+          <span class="sticker">100 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32764.jpg" alt="Tapo T310"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32764</div>
+            <div class="meta">• Датчик температуры и влажности (EU)</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32764&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo T310 (EU)</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="sensor">
+        <div class="card has-sticker">
+          <span class="sticker">100 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32757.jpg" alt="Tapo T110"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32757</div>
+            <div class="meta">• Контактный датчик • двери/окна</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32757&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo T110</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="sensor">
+        <div class="card has-sticker">
+          <span class="sticker">150 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32767.jpg" alt="Tapo T315"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32767</div>
+            <div class="meta">• Монитор темп./влажн. с дисплеем (EU)</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32767&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo T315 (EU)</a>
+          </div>
+        </div>
+      </li>
+      <li data-cat="sensor">
+        <div class="card has-sticker">
+          <span class="sticker">100 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32761.jpg" alt="Tapo T300"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32761</div>
+            <div class="meta">• Датчик протечки воды</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32761&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo T300</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Освещение -->
+      <li data-cat="light">
+        <div class="card has-sticker">
+          <span class="sticker">290 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32910.jpg" alt="Tapo L900-5"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32910</div>
+            <div class="meta">• LED-лента • 5 м</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32910&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo L900-5</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Роботы -->
+      <li data-cat="robot">
+        <div class="card has-sticker">
+          <span class="sticker">550 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32750.jpg" alt="Tapo RV20 Mop"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32750</div>
+            <div class="meta">• Робот-пылесос • LiDAR MagSlim • влажная уборка</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32750&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo RV20 Mop</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Хаб -->
+      <li data-cat="hub">
+        <div class="card has-sticker">
+          <span class="sticker">400 Баллов</span>
+          <div class="thumb"><img src="https://www.delta.kg/images/import/Photo/32774.jpg" alt="Tapo H200"></div>
+          <div class="item-body">
+            <div class="sku">Арт: 32774</div>
+            <div class="meta">• Хаб умного дома • до 68 устройств • microSD до 512 ГБ • 90 дБ</div>
+            <a target="_blank" rel="noopener" href="https://www.delta.kg/?subcats=Y&pcode_from_q=Y&pshort=N&pfull=N&pname=Y&pkeywords=N&search_performed=Y&pdescription=Y&pshort=Y&pfull=Y&pname=Y&pkeywords=Y&match=all&pcode_from_q=Y&q=32774&dispatch=products.search&security_hash=34e44ce1b977c35210d2dd8337c455f6">Tapo H200</a>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</details>
+
+  
+<div class="brand-head solo">
+  <div class="pill">Общий бонус до 2%</div>
+  <div class="bonus-title">TP-Link VIGI</div>
+  <span class="sku">ОБЩИЙ БОНУС до 2%</span>
+</div>
+
+<div class="brand-head solo">
+  <div class="pill">Общий бонус до 1%</div>
+  <div class="bonus-title">Hilook</div>
+  <span class="sku">ОБЩИЙ БОНУС до 1%</span>
+</div>
+
+
+
+</div>
+
+</body>
+</html>
